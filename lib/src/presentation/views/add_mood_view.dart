@@ -19,7 +19,7 @@ class AddMoodView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final moodState = ref.watch(moodProvider);
     final moodCtrl = ref.read(moodProvider.notifier);
-    final moodIndex = moodState.moodIndex;
+    final moodIndex = moodState.valueOrNull?.moodIndex;
     final moodEnum = MoodEnum.fromIndex(moodIndex);
     return Scaffold(
       backgroundColor: moodEnum.imageColor,
@@ -57,65 +57,70 @@ class AddMoodView extends ConsumerWidget {
             MoodPrimaryButton(
               onPressed: () {
                 // TODO: ADD MOOD
-                // context.pop();
+
                 showModalBottomSheet(
                   context: context,
-
                   constraints: BoxConstraints(maxHeight: context.deviceHeight(0.9)),
                   elevation: 8,
                   builder: (context) {
-                    return Ink(
-                      color: moodEnum.imageColor.withValues(alpha: 0.1),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 15,
-                        children: [
-                          MoodText.text(
-                            context: context,
-                            text: moodEnum.moodName,
-                            textStyle: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                          ),
+                    return Consumer(
+                      builder: (context, ref, _) {
+                        final moodSheetState = ref.watch(moodProvider);
 
-                          MoodTextfield(
-                            hintText: 'How is your day going??',
-                            controller: moodCtrl.noteController,
-                            maxLines: 5,
-                            maxLength: 100,
-                            validator: (p0) => p0 == null || p0.isEmpty ? 'Please enter your mood' : null,
-                            inputFormatters: [],
-                          ),
+                        return Ink(
+                          color: moodEnum.imageColor.withValues(alpha: 0.1),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 15,
+                            children: [
+                              MoodText.text(
+                                context: context,
+                                text: moodEnum.moodName,
+                                textStyle: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                              ),
 
-                          if (moodState.errorMessage != null)
-                            MoodText.text(
-                              context: context,
-                              text: moodState.errorMessage ?? '',
-                              textStyle: context.textTheme.bodyMedium,
-                              color: AppColors.moodRed,
-                              fontWeight: FontWeight.bold,
-                              isCenter: false,
-                            ),
+                              MoodTextfield(
+                                hintText: 'How is your day going??',
+                                controller: moodCtrl.noteController,
+                                maxLines: 5,
+                                maxLength: 100,
+                                validator: (p0) => p0 == null || p0.isEmpty ? 'Please enter your mood' : null,
+                                inputFormatters: [],
+                              ),
 
-                          MoodPrimaryButton(
-                            state: moodState.isLoading ? ButtonState.loading : ButtonState.loaded,
-                            onPressed: () {
-                              moodCtrl.setErrorMessage(null);
+                              if (moodSheetState.value?.errorMessage != null)
+                                MoodText.text(
+                                  context: context,
+                                  text: moodSheetState.value?.errorMessage ?? '',
+                                  textStyle: context.textTheme.bodyMedium,
+                                  color: AppColors.moodRed,
+                                  fontWeight: FontWeight.bold,
+                                  isCenter: false,
+                                ),
 
-                              if (moodCtrl.noteController.text.isEmpty) {
-                                moodCtrl.setErrorMessage('Please enter a description for your mood!!!');
-                                return;
-                              }
-                              moodCtrl.addMood(
-                                onSuccess: () {
-                                  context.showSnackBar(message: 'Mood added successfully');
-                                  context.pop();
-                                  context.pop();
+                              MoodPrimaryButton(
+                                state: moodSheetState.isLoading ? ButtonState.loading : ButtonState.loaded,
+                                onPressed: () {
+                                  moodCtrl.setErrorMessage(null);
+
+                                  if (moodCtrl.noteController.text.isEmpty) {
+                                    moodCtrl.setErrorMessage('Please enter a description for your mood!!!');
+                                    return;
+                                  }
+                                  moodCtrl.addMood(
+                                    onSuccess: () {
+                                      context.showSnackBar(message: 'Mood added successfully');
+                                      context.pop();
+                                      context.pop();
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                            title: 'Add Mood',
-                          ).padOnly(bottom: 5),
-                        ],
-                      ).padAll(20),
+                                title: 'Add Mood',
+                              ).padOnly(bottom: 5),
+                            ],
+                          ).padAll(20),
+                        );
+                      },
                     );
                   },
                 );

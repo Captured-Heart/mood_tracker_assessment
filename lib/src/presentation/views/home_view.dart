@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,8 @@ import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
+import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
+import 'package:mood_tracker_assessment/src/data/controller/mood_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_mood_calendar.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_profile_pic_name.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_set_mood.dart';
@@ -16,6 +20,9 @@ class HomeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final journalState = ref.watch(journalProvider);
+    final journalList = journalState.valueOrNull?.journalList;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -94,9 +101,12 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                         // The list of recent activities
-                        // ...List.generate(3, (index) {
-                        //   return JournalListTile().fadeInFromTop(delay: (index * 50).ms, animationDuration: 20.ms);
-                        // }),
+                        ...List.generate(journalList?.length ?? 0, (index) {
+                          final journal = journalList![index];
+                          return JournalListTile(
+                            journal: journal,
+                          ).fadeInFromTop(delay: (index * 50).ms, animationDuration: 20.ms);
+                        }),
                       ],
                     ),
                   ],
