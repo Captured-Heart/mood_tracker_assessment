@@ -1,0 +1,35 @@
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mood_tracker_assessment/constants/typedefs.dart';
+import 'package:mood_tracker_assessment/hive_helper/hive_adapters.dart';
+import 'package:mood_tracker_assessment/hive_helper/register_adapters.dart';
+import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
+import 'package:mood_tracker_assessment/src/domain/entities/user_entity.dart';
+import 'package:mood_tracker_assessment/src/domain/repository/local_repository.dart';
+
+enum HiveKeys { mood, user, sessionUser }
+
+class CacheHelper {
+  static late final LocalStorage<UserEntity> _userLocalModel;
+  static late final LocalStorage<MoodEntity> _moodLocalModel;
+  static late final LocalStorage<MoodEntity> _journalLocalModel;
+  static late final LocalStorage<UserEntity> _sessionUserLocalModel;
+
+  static FutureVoid openHiveBoxes() async {
+    await Hive.initFlutter();
+    //i register adapters here
+    registerAdapters();
+    // i open the boxes (userEntity and moodEntity)
+    _userLocalModel = LocalRepository<UserEntity>(await Hive.openBox(HiveAdapters.userEntity));
+    _moodLocalModel = LocalRepository<MoodEntity>(await Hive.openBox(HiveAdapters.moodEntity));
+    _journalLocalModel = LocalRepository<MoodEntity>(await Hive.openBox(HiveAdapters.journalEntity));
+    _sessionUserLocalModel = LocalRepository<UserEntity>(await Hive.openBox(HiveAdapters.sessionUser));
+  }
+
+  // Getters for the local models
+  static LocalStorage<UserEntity> get userLocalModel => _userLocalModel;
+  static LocalStorage<MoodEntity> get moodLocalModel => _moodLocalModel;
+  static LocalStorage<UserEntity> get sessionUserLocalModel => _sessionUserLocalModel;
+  static LocalStorage<MoodEntity> get journalLocalModel => _journalLocalModel;
+
+  static UserEntity? get currentUser => _sessionUserLocalModel.read(HiveKeys.sessionUser.name);
+}

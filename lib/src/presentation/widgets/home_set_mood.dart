@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:mood_tracker_assessment/constants/app_colors.dart';
+import 'package:mood_tracker_assessment/constants/app_images.dart';
+import 'package:mood_tracker_assessment/constants/extension.dart';
+import 'package:mood_tracker_assessment/constants/nav_routes.dart';
+import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/primary_button.dart';
+import 'package:mood_tracker_assessment/src/presentation/widgets/texts/texts_widget.dart';
+
+class HomeSetMoodWidget extends StatelessWidget {
+  const HomeSetMoodWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.kGrey, width: 0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(10),
+        minLeadingWidth: 10,
+        titleAlignment: ListTileTitleAlignment.top,
+        leading: Image.asset(AppImages.moodAwesome.pngPath, width: 60, height: 80, fit: BoxFit.fill),
+
+        title: MoodText.text(
+          text: 'How was your mood today?\nSet Your mood',
+          context: context,
+          textStyle: context.textTheme.bodyLarge,
+        ),
+        subtitle: Row(
+          children: [
+            MoodPrimaryButton(
+                  onPressed: () {
+                    context.pushNamed(NavRoutes.addMoodRoute);
+                  },
+                  title: 'Set Mood',
+                  height: 40,
+                  bGcolor: AppColors.kGreen,
+                  isTitleShrinked: true,
+                )
+                .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                .scaleXY(begin: 0.95, end: 1.1, duration: 1000.ms, curve: Curves.easeInOut),
+          ],
+        ).padOnly(top: 10),
+      ),
+    );
+  }
+}
