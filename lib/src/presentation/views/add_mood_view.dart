@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/button_state.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/mood_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/outline_button.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/primary_button.dart';
@@ -78,11 +80,11 @@ class AddMoodView extends ConsumerWidget {
                               ),
 
                               MoodTextfield(
-                                hintText: 'How is your day going??',
+                                hintText: TextConstants.howIsYourDayGoing.tr(),
                                 controller: moodCtrl.noteController,
                                 maxLines: 5,
                                 maxLength: 100,
-                                validator: (p0) => p0 == null || p0.isEmpty ? 'Please enter your mood' : null,
+                                validator: (p0) => p0 == null || p0.isEmpty ? TextConstants.pleaseEnterYourMood.tr() : null,
                                 inputFormatters: [],
                               ),
 
@@ -103,18 +105,18 @@ class AddMoodView extends ConsumerWidget {
                                   moodCtrl.setErrorMessage(null);
 
                                   if (moodCtrl.noteController.text.isEmpty) {
-                                    moodCtrl.setErrorMessage('Please enter a description for your mood!!!');
+                                    moodCtrl.setErrorMessage(TextConstants.pleaseEnterDescriptionMood.tr());
                                     return;
                                   }
                                   moodCtrl.addMood(
                                     onSuccess: () {
-                                      context.showSnackBar(message: 'Mood added successfully');
+                                      context.showSnackBar(message: TextConstants.moodAddedSuccessfully.tr()  );
                                       context.pop();
                                       context.pop();
                                     },
                                   );
                                 },
-                                title: 'Add Mood',
+                                title: TextConstants.addMood.tr(),
                               ).padOnly(bottom: 5),
                             ],
                           ).padAll(20),
@@ -125,7 +127,7 @@ class AddMoodView extends ConsumerWidget {
                 );
               },
               state: ButtonState.initial,
-              title: 'Next',
+              title: TextConstants.next.tr(),
               // textColor: AppColors.kWhite,
             ),
           ],

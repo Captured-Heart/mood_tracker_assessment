@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +54,7 @@ class _HomeMoodCalendarState extends ConsumerState<HomeMoodCalendar> {
             dowBuilder: (context, day) {
               return MoodText.text(
                 context: context,
-                text: DateFormat('E').format(day).substring(0, 3),
+                text: DateFormat('E', context.locale.languageCode).format(day),
                 isCenter: true,
                 textStyle: context.textTheme.bodyLarge,
                 color: isSameDay(day, (moodState?.focusedDay ?? _focusedDay)) ? AppColors.kPrimary : null,

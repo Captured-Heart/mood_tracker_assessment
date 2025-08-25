@@ -7,8 +7,8 @@ class ApiConstants {
   static const bool isProduction = false;
 
   // API URLs
-  static const String baseUrl = '';
-  static const String authUrl = '';
+  static const String baseUrl = 'https://openlibrary.org';
+  // static const String authUrl = '';
 
   // Request Configuration
   static const Duration connectTimeout = Duration(seconds: 10);

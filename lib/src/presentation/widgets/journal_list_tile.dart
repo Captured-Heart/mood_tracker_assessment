@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -6,6 +7,7 @@ import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_form.dart';
@@ -76,7 +78,7 @@ class _JournalListTileState extends ConsumerState<JournalListTile> with TickerPr
                   backgroundColor: AppColors.kGreen,
                   foregroundColor: Colors.white,
                   icon: Icons.edit,
-                  label: 'Edit',
+                  label: TextConstants.edit.tr(),
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
                 ),
                 SlidableAction(
@@ -98,7 +100,7 @@ class _JournalListTileState extends ConsumerState<JournalListTile> with TickerPr
                   backgroundColor: AppColors.moodRed,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
-                  label: 'Delete',
+                  label: TextConstants.delete.tr(),
                   borderRadius: BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
                 ),
               ],
@@ -120,7 +122,7 @@ class _JournalListTileState extends ConsumerState<JournalListTile> with TickerPr
                           children: [
                             Expanded(
                               child: MoodText.text(
-                                text: moodEnum.moodName,
+                                text: moodEnum.moodName.tr(),
                                 context: context,
                                 textStyle: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                               ),
@@ -135,7 +137,7 @@ class _JournalListTileState extends ConsumerState<JournalListTile> with TickerPr
                           ],
                         ),
                         MoodText.text(
-                          text: widget.journal.description,
+                          text: widget.journal.description.tr(),
                           context: context,
                           color: AppColors.kGrey,
                           textStyle: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),

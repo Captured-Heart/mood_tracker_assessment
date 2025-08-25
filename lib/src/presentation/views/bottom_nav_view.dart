@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/hive_helper/cache_helper.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
@@ -71,11 +73,11 @@ class _BottomNavViewState extends ConsumerState<BottomNavView> {
         onTap: (index) {
           ref.read(bottomNavBarIndexProvider.notifier).update((state) => index);
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.mood), label: 'Rewards'),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Journal'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: TextConstants.home.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.mood), label: TextConstants.rewards.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: TextConstants.journal.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: TextConstants.profile.tr()),
         ],
       ),
     );

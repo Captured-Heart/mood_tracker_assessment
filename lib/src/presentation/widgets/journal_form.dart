@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/button_state.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/primary_button.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/textfield/app_textfield.dart';
@@ -61,11 +63,11 @@ class AddJournalForm extends ConsumerWidget {
           ),
 
           MoodTextfield(
-            hintText: 'What\'s on your mind?',
+            hintText: TextConstants.whatsOnYourMind.tr(),
             controller: journalCtrl.addJournalController,
             maxLines: 7,
             maxLength: 300,
-            validator: (p0) => p0 == null || p0.isEmpty ? 'Please enter your journal' : null,
+            validator: (p0) => p0 == null || p0.isEmpty ? TextConstants.pleaseEnterYourJournal.tr() : null,
             inputFormatters: [],
           ),
           if (journalState.value?.errorMessage != null)

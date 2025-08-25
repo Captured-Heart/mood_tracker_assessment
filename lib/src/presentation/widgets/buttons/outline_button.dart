@@ -78,7 +78,9 @@ class _MoodOutlineButtonButtonState extends State<MoodOutlineButton> {
                 isLoading
                     ? Transform.scale(
                       scale: 0.8,
-                      child: const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(AppColors.kWhite)),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(widget.textColor ?? context.colorScheme.primary),
+                      ),
                     )
                     : Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mood_tracker_assessment/constants/api_constants.dart';
-import 'package:mood_tracker_assessment/src/domain/repository/token_repository.dart';
+import 'package:mood_tracker_assessment/src/domain/repository/network/token_repository.dart';
 import 'package:mood_tracker_assessment/utils/token_utils.dart';
 
 final tokenRepositoryProvider = Provider<TokenRepository>((ref) {

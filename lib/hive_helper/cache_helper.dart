@@ -6,7 +6,7 @@ import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/user_entity.dart';
 import 'package:mood_tracker_assessment/src/domain/repository/local_repository.dart';
 
-enum HiveKeys { mood, user, sessionUser, threshHold }
+enum HiveKeys { mood, user, sessionUser, threshHold, theme }
 
 class CacheHelper {
   static late final LocalStorage<UserEntity> _userLocalModel;
@@ -14,6 +14,7 @@ class CacheHelper {
   static late final LocalStorage<MoodEntity> _journalLocalModel;
   static late final LocalStorage<UserEntity> _sessionUserLocalModel;
   static late final LocalStorage<num> _threshHoldLocalModel;
+  static late final LocalStorage<String> _themeLocalModel;
 
   static FutureVoid openHiveBoxes() async {
     await Hive.initFlutter();
@@ -25,6 +26,7 @@ class CacheHelper {
     _journalLocalModel = LocalRepository<MoodEntity>(await Hive.openBox(HiveAdapters.journalEntity));
     _sessionUserLocalModel = LocalRepository<UserEntity>(await Hive.openBox(HiveAdapters.sessionUser));
     _threshHoldLocalModel = LocalRepository<num>(await Hive.openBox(HiveAdapters.threshHold));
+    _themeLocalModel = LocalRepository<String>(await Hive.openBox(HiveAdapters.theme));
   }
 
   // Getters for the local models
@@ -33,6 +35,7 @@ class CacheHelper {
   static LocalStorage<UserEntity> get sessionUserLocalModel => _sessionUserLocalModel;
   static LocalStorage<MoodEntity> get journalLocalModel => _journalLocalModel;
   static LocalStorage<num> get threshHoldLocalModel => _threshHoldLocalModel;
+  static LocalStorage<String> get themeLocalModel => _themeLocalModel;
 
   static UserEntity? get currentUser => _sessionUserLocalModel.read(HiveKeys.sessionUser.name);
 
@@ -42,5 +45,14 @@ class CacheHelper {
 
   static num getClaimedThreshold() {
     return _threshHoldLocalModel.read(HiveKeys.threshHold.name) ?? 0;
+  }
+
+  // set theme and get theme
+  static Future<void> setTheme(String theme) async {
+    await _themeLocalModel.write(HiveKeys.theme.name, theme);
+  }
+
+  static String? getTheme() {
+    return _themeLocalModel.read(HiveKeys.theme.name);
   }
 }

@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/reward_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/nav_pages_app_bar.dart';
@@ -19,22 +21,13 @@ class RewardsView extends ConsumerStatefulWidget {
 }
 
 class _RewardsViewState extends ConsumerState<RewardsView> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     // ref.read(rewardProvider.notifier).loadRewards();
-  //   });
-  // }
-
   final ScrollController _scrollController = ScrollController();
 
-  // IconData _getBadgeIcon(gam.BadgeType type) {
   @override
   Widget build(BuildContext context) {
     final rewardVal = ref.watch(rewardProvider);
     return Scaffold(
-      appBar: NavBarPagesAppBar(title: "Rewards"),
+      appBar: NavBarPagesAppBar(title: TextConstants.rewards.tr()),
       body: rewardVal.when(
         data: (data) {
           final rewardState = data;
@@ -47,7 +40,7 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
               children: [
                 MoodText.text(
                   context: context,
-                  text: 'Your Stats',
+                  text: TextConstants.yourStats.tr(),
                   textStyle: context.textTheme.titleLarge,
                   fontWeight: FontWeight.bold,
                 ),
@@ -55,22 +48,22 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
                   children: [
                     Expanded(
                       child: RewardStatsCard(
-                        title: 'Journal Entries',
-                        value: rewardState?.totalEntries?.toString() ?? '0',
+                        title: TextConstants.journalEntries.tr(),
+                        value: rewardState.totalEntries?.toString() ?? '0',
                         icon: Icons.book,
                         color: Colors.blue,
                       ).onTap(
                         onTap: () {
                           ref.read(bottomNavBarIndexProvider.notifier).update((state) => 2);
                         },
-                        tooltip: 'View Journal Entries',
+                        tooltip: TextConstants.viewJournalEntries.tr(),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: RewardStatsCard(
-                        title: 'Points Earned',
-                        value: rewardState?.totalPoints?.toString() ?? '0',
+                        title: TextConstants.pointsEarned.tr(),
+                        value: rewardState.totalPoints?.toString() ?? '0',
                         icon: Icons.stars,
                         color: Colors.amber,
                       ),
@@ -81,8 +74,8 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
                   children: [
                     Expanded(
                       child: RewardStatsCard(
-                        title: 'Current Streak',
-                        value: rewardState?.streak?.toString() ?? '0',
+                        title: TextConstants.currentStreak.tr(),
+                        value: rewardState.streak?.toString() ?? '0',
                         icon: Icons.local_fire_department,
                         color: Colors.orange,
                       ),
@@ -90,8 +83,8 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: RewardStatsCard(
-                        title: 'Badges Earned',
-                        value: rewardState?.earnedBadges.length.toString() ?? '0',
+                        title: TextConstants.badgesEarned.tr(),
+                        value: rewardState.earnedBadges.length.toString() ?? '0',
                         icon: Icons.emoji_events,
                         color: Colors.green,
                       ),
@@ -100,19 +93,19 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
                 ),
                 MoodText.text(
                   context: context,
-                  text: 'Your Badges',
+                  text: TextConstants.yourBadges.tr(),
                   textStyle: context.textTheme.titleLarge,
                   fontWeight: FontWeight.bold,
                 ),
 
-                rewardState?.earnedBadges == null || (rewardState?.earnedBadges.isEmpty ?? true)
+                rewardState.earnedBadges == null || (rewardState.earnedBadges.isEmpty ?? true)
                     ? RewardsBadgesEmpty()
                     : ListView.builder(
                       shrinkWrap: true,
                       controller: _scrollController,
-                      itemCount: rewardState?.earnedBadges.length ?? 0,
+                      itemCount: rewardState.earnedBadges.length ?? 0,
                       itemBuilder: (context, index) {
-                        final badge = rewardState?.earnedBadges[index];
+                        final badge = rewardState.earnedBadges[index];
                         if (badge == null) return const SizedBox.shrink();
                         return BadgeListTile(badge: badge);
                       },
@@ -121,7 +114,7 @@ class _RewardsViewState extends ConsumerState<RewardsView> {
             ),
           );
         },
-        error: (e, st) => Text('Error: $e'),
+        error: (e, st) => Text('${TextConstants.error.tr()}: $e'),
         loading: () => Center(child: CircularProgressIndicator()),
       ),
     );

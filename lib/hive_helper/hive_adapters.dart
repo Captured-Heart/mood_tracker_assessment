@@ -4,4 +4,5 @@ class HiveAdapters {
   static const String sessionUser = 'SessionUserAdapter';
   static const String journalEntity = 'JournalEntityAdapter';
   static const String threshHold = 'ThreshHoldAdapter';
+  static const String theme = 'ThemeAdapter';
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 
 enum MoodEnum {
-  awesome('Awesome', 10),
-  good('Good', 5),
-  sad('Sad', 3),
-  horrible('Horrible', 1);
+  awesome(TextConstants.awesome, 10),
+  good(TextConstants.good, 5),
+  sad(TextConstants.sad, 3),
+  horrible(TextConstants.horrible, 1);
 
   const MoodEnum(this.moodName, this.points);
   final String moodName;

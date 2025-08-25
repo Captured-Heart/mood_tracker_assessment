@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/animations/toggle_animation.dart';
 
 extension ThemeExtensions on BuildContext {
@@ -54,13 +56,13 @@ extension TimeOfDayStringExtension on String {
     final hour = now.hour;
 
     if (hour >= 5 && hour < 12) {
-      return "Good morning";
+      return TextConstants.goodMorning.tr();
     } else if (hour >= 12 && hour < 17) {
-      return "Good afternoon";
+      return TextConstants.goodAfternoon.tr();
     } else if (hour >= 17 && hour < 21) {
-      return "Good evening";
+      return TextConstants.goodEvening.tr();
     } else {
-      return "Good night";
+      return TextConstants.goodNight.tr();
     }
   }
 

@@ -4,4 +4,5 @@ class NavRoutes {
   static const String homeRoute = 'Home';
   static const String journalRoute = 'Journal';
   static const String authRoute = 'Auth';
+  static const String apiDemoRoute = 'Api_Demo';
 }

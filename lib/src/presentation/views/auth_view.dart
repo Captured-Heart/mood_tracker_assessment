@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/button_state.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/nav_routes.dart';
 import 'package:mood_tracker_assessment/constants/spacings.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/auth_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/primary_button.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/textfield/app_textfield.dart';
@@ -30,7 +32,7 @@ class AuthView extends ConsumerWidget {
         authCtrl.resetErrorMessage();
       }
       if (next.isAuthenticated) {
-        context.showSnackBar(message: 'Authentication successful!', isError: false);
+        context.showSnackBar(message: TextConstants.authenticationSuccessful.tr(), isError: false);
         context.pushNamed(NavRoutes.homeRoute);
       }
     });
@@ -87,7 +89,8 @@ class AuthView extends ConsumerWidget {
                             ),
 
                             MoodText.text(
-                              text: '${isLoginView ? 'Login' : 'Welcome'} to Mood Tracker',
+                              text:
+                                  '${isLoginView ? TextConstants.login.tr() : TextConstants.welcome.tr()} to Mood Tracker',
                               context: context,
                               textStyle: context.textTheme.titleLarge,
                             ),
@@ -98,7 +101,7 @@ class AuthView extends ConsumerWidget {
                         if (!isLoginView)
                           MoodTextfield(
                             filled: true,
-                            hintText: 'Enter your Full Name',
+                            hintText: TextConstants.enterYourFullName.tr(),
                             controller: authCtrl.nameController,
                             keyboardType: TextInputType.name,
                             inputFormatters: [],
@@ -108,7 +111,7 @@ class AuthView extends ConsumerWidget {
                         //enter your email address
                         MoodTextfield(
                           filled: true,
-                          hintText: 'Enter your Email address',
+                          hintText: TextConstants.enterYourEmailAddress.tr(),
                           controller: authCtrl.emailController,
                           keyboardType: TextInputType.emailAddress,
                           validator: (p0) => AppValidations.validatedEmail(p0),
@@ -117,7 +120,7 @@ class AuthView extends ConsumerWidget {
                         //enter password
                         MoodTextfield(
                           filled: true,
-                          hintText: 'Password',
+                          hintText: TextConstants.password.tr(),
                           controller: authCtrl.passwordController,
                           validator: (p0) => AppValidations.validatePassword(p0),
                           obscureText: authState.hidePassword,
@@ -131,7 +134,7 @@ class AuthView extends ConsumerWidget {
                             onTap: () {
                               authCtrl.hideShowPassword();
                             },
-                            tooltip: authState.hidePassword ? 'show' : 'hide',
+                            tooltip: authState.hidePassword ? TextConstants.show.tr() : TextConstants.hide.tr(),
                           ),
                         ),
                         // sign up / login button
@@ -147,7 +150,7 @@ class AuthView extends ConsumerWidget {
                               }
                             }
                           },
-                          title: isLoginView ? 'Login' : 'Sign up',
+                          title: isLoginView ? TextConstants.login.tr() : TextConstants.signUp.tr(),
                         ),
 
                         // already have an account
@@ -158,14 +161,17 @@ class AuthView extends ConsumerWidget {
                             Flexible(
                               child: MoodText.text(
                                 context: context,
-                                text: !isLoginView ? 'Already have an account?' : 'Don\'t have an account?',
+                                text:
+                                    !isLoginView
+                                        ? TextConstants.alreadyHaveAccount.tr()
+                                        : TextConstants.dontHaveAccount.tr(),
                                 textStyle: context.textTheme.bodyLarge,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             MoodText.text(
                               context: context,
-                              text: !isLoginView ? 'Login' : 'Sign Up',
+                              text: !isLoginView ? TextConstants.login.tr() : TextConstants.signUp.tr(),
                               textStyle: context.textTheme.bodyLarge,
                               color: context.theme.primaryColor,
                               fontWeight: FontWeight.w700,
@@ -173,7 +179,7 @@ class AuthView extends ConsumerWidget {
                               onTap: () {
                                 authCtrl.toggleLoginState();
                               },
-                              tooltip: !isLoginView ? 'Login' : 'Sign Up',
+                              tooltip: !isLoginView ? TextConstants.login.tr() : TextConstants.signUp.tr(),
                             ),
                           ],
                         ),

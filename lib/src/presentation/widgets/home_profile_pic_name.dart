@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/hive_helper/cache_helper.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/texts/texts_widget.dart';
@@ -19,7 +21,7 @@ class HomeProfilePicNameWidget extends ConsumerWidget {
         onTap: () {
           ref.read(bottomNavBarIndexProvider.notifier).update((state) => 3);
         },
-        tooltip: 'Profile',
+        tooltip: TextConstants.profile.tr(),
       ),
       title: MoodText.text(
         text: '${DateTime.now().toIso8601String().getTimeOfDay()},',

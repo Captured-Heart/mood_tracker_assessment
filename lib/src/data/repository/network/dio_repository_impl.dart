@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mood_tracker_assessment/constants/api_constants.dart';
 import 'package:mood_tracker_assessment/src/data/repository/network/token_repository_impl.dart';
-import 'package:mood_tracker_assessment/src/domain/repository/dio_repository.dart';
-import 'package:mood_tracker_assessment/src/domain/repository/token_repository.dart';
+import 'package:mood_tracker_assessment/src/domain/repository/network/dio_repository.dart';
+import 'package:mood_tracker_assessment/src/domain/repository/network/token_repository.dart';
 
 final dioRepositoryProvider = Provider<DioRepository>((ref) {
   final tokenRepository = ref.read(tokenRepositoryProvider);
@@ -18,6 +18,8 @@ class DioRepositoryImpl extends DioRepository {
   final TokenRepository _tokenService;
 
   DioRepositoryImpl(this._tokenService);
+
+  Dio get dio => _dio;
 
   @override
   Future<void> initialize() async {
@@ -35,6 +37,12 @@ class DioRepositoryImpl extends DioRepository {
 
     await _setupInterceptors();
     _isInitialized = true;
+  }
+
+  Future<void> _ensureInitialized() async {
+    if (!_isInitialized) {
+      await initialize();
+    }
   }
 
   //! ---------- ADD AUTH TOKENS -----------------
@@ -179,5 +187,70 @@ class DioRepositoryImpl extends DioRepository {
     } catch (e) {
       return false;
     }
+  }
+
+  // HTTP Methods Implementation
+  @override
+  Future<Response<T>> get<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    await _ensureInitialized();
+    return await _dio.get<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    );
+  }
+
+  @override
+  Future<Response<T>> post<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    await _ensureInitialized();
+    return await _dio.post<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+  }
+
+  @override
+  Future<Response<T>> put<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    await _ensureInitialized();
+    return await _dio.put<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
   }
 }

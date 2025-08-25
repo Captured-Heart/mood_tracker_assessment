@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
+import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_empty.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_form.dart';
@@ -16,7 +18,7 @@ class JournalView extends ConsumerWidget {
     final journalState = ref.watch(journalProvider);
     final journalList = journalState.valueOrNull?.journalList;
     return Scaffold(
-      appBar: NavBarPagesAppBar(title: 'Journal'),
+      appBar: NavBarPagesAppBar(title: TextConstants.journal.tr()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(

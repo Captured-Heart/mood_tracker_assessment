@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
@@ -19,11 +20,11 @@ class BadgeListTile extends StatelessWidget {
           backgroundColor: badgeColor.withValues(alpha: 0.2),
           child: Icon(badgeIcon, color: badgeColor),
         ),
-        title: Text(badge.badge.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        title: Text(badge.badge.title.tr(), style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(badge.badge.description),
+            Text(badge.badge.description.tr()),
             const SizedBox(height: 4),
             Text(
               'Earned: ${DateFormat('MMM d, y, hh:mm a').format(badge.earnedAt)}',

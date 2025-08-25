@@ -59,7 +59,6 @@ class AuthRepoImpl implements AuthRepository {
       if (currentUser?.email == null || currentUser?.id == null) {
         return RepoResult.error('No user is currently signed in.');
       } else {
-        await _userLocalRepository.remove(currentUser!.id);
         await _sessionUserLocalRepository.remove(HiveKeys.sessionUser.name);
         return RepoResult.success(null);
       }

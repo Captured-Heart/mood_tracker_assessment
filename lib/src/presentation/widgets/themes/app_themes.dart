@@ -28,4 +28,30 @@ class AppThemeData {
       ),
     ),
   );
+
+  // ------------- FOR DARK MODE ------------
+  static ThemeData themeDark = ThemeData(
+    primaryColor: AppColors.kPrimary,
+    useMaterial3: true,
+    scaffoldBackgroundColor: AppColors.kBlack,
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.kPrimary,
+      primaryContainer: AppColors.kPrimaryContainer,
+      onPrimary: AppColors.kBlack,
+      surface: AppColors.kBlack,
+      onSurface: AppColors.kWhite,
+      error: AppColors.moodRed,
+      onError: AppColors.kWhite,
+    ),
+
+    iconButtonTheme: const IconButtonThemeData(style: ButtonStyle(iconSize: WidgetStatePropertyAll<double>(18))),
+    textSelectionTheme: const TextSelectionThemeData(cursorColor: AppColors.kPrimary),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.kPrimary,
+        foregroundColor: AppColors.kWhite,
+        shape: const RoundedRectangleBorder(borderRadius: AppSpacings.defaultButtonBorderRadius),
+      ),
+    ),
+  );
 }

@@ -1,3 +1,4 @@
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/api_response.dart';
 
 abstract class ConnectivityRepository {
@@ -7,4 +8,5 @@ abstract class ConnectivityRepository {
     Duration retryDelay = const Duration(seconds: 2),
     String? operationName,
   });
+  Stream<InternetStatus> internetStatus();
 }
