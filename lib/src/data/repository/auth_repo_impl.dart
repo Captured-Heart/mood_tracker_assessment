@@ -28,6 +28,7 @@ class AuthRepoImpl implements AuthRepository {
         return RepoResult.error('Email already exists');
       } else {
         await _userLocalRepository.write(user.id, user);
+        setCurrentUser(user);
         return RepoResult.success(null);
       }
     } catch (e) {

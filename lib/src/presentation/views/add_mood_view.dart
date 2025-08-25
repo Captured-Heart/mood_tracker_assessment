@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
-import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/button_state.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
-import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/mood_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/outline_button.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/buttons/primary_button.dart';
@@ -99,7 +97,8 @@ class AddMoodView extends ConsumerWidget {
                                 ),
 
                               MoodPrimaryButton(
-                                state: moodSheetState.isLoading ? ButtonState.loading : ButtonState.loaded,
+                                state:
+                                    moodSheetState.value?.isLoading == true ? ButtonState.loading : ButtonState.loaded,
                                 onPressed: () {
                                   moodCtrl.setErrorMessage(null);
 

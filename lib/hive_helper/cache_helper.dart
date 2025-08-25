@@ -6,13 +6,14 @@ import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/user_entity.dart';
 import 'package:mood_tracker_assessment/src/domain/repository/local_repository.dart';
 
-enum HiveKeys { mood, user, sessionUser }
+enum HiveKeys { mood, user, sessionUser, threshHold }
 
 class CacheHelper {
   static late final LocalStorage<UserEntity> _userLocalModel;
   static late final LocalStorage<MoodEntity> _moodLocalModel;
   static late final LocalStorage<MoodEntity> _journalLocalModel;
   static late final LocalStorage<UserEntity> _sessionUserLocalModel;
+  static late final LocalStorage<num> _threshHoldLocalModel;
 
   static FutureVoid openHiveBoxes() async {
     await Hive.initFlutter();
@@ -23,6 +24,7 @@ class CacheHelper {
     _moodLocalModel = LocalRepository<MoodEntity>(await Hive.openBox(HiveAdapters.moodEntity));
     _journalLocalModel = LocalRepository<MoodEntity>(await Hive.openBox(HiveAdapters.journalEntity));
     _sessionUserLocalModel = LocalRepository<UserEntity>(await Hive.openBox(HiveAdapters.sessionUser));
+    _threshHoldLocalModel = LocalRepository<num>(await Hive.openBox(HiveAdapters.threshHold));
   }
 
   // Getters for the local models
@@ -30,6 +32,15 @@ class CacheHelper {
   static LocalStorage<MoodEntity> get moodLocalModel => _moodLocalModel;
   static LocalStorage<UserEntity> get sessionUserLocalModel => _sessionUserLocalModel;
   static LocalStorage<MoodEntity> get journalLocalModel => _journalLocalModel;
+  static LocalStorage<num> get threshHoldLocalModel => _threshHoldLocalModel;
 
   static UserEntity? get currentUser => _sessionUserLocalModel.read(HiveKeys.sessionUser.name);
+
+  static Future<void> setClaimedThreshold(num threshHold) async {
+    await _threshHoldLocalModel.write(HiveKeys.threshHold.name, threshHold);
+  }
+
+  static num getClaimedThreshold() {
+    return _threshHoldLocalModel.read(HiveKeys.threshHold.name) ?? 0;
+  }
 }

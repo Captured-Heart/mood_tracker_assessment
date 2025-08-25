@@ -17,7 +17,7 @@ class HomeSetMoodWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final moodState = ref.watch(moodProvider);
     final hasMoodForToday = moodState.valueOrNull?.hasMoodForToday ?? false;
-    final moodForToday = moodState.valueOrNull?.moods.where((mood) => mood.createdAt?.isToday == true).first;
+    final moodForToday = moodState.valueOrNull?.moods.where((mood) => mood.createdAt?.isToday == true).firstOrNull;
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.kGrey, width: 0.5),

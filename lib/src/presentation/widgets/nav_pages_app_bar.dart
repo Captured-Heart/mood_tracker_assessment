@@ -8,7 +8,10 @@ class NavBarPagesAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(title: MoodText.text(context: context, text: title, textStyle: context.textTheme.titleLarge));
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: MoodText.text(context: context, text: title, textStyle: context.textTheme.titleLarge),
+    );
   }
 
   @override

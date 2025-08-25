@@ -3,13 +3,14 @@ import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/app_images.dart';
 
 enum MoodEnum {
-  awesome('Awesome'),
-  good('Good'),
-  sad('Sad'),
-  horrible('Horrible');
+  awesome('Awesome', 10),
+  good('Good', 5),
+  sad('Sad', 3),
+  horrible('Horrible', 1);
 
-  const MoodEnum(this.moodName);
+  const MoodEnum(this.moodName, this.points);
   final String moodName;
+  final num points;
 
   static MoodEnum getMoodEnum(String name) {
     return MoodEnum.values.firstWhere((mood) => mood.moodName.toLowerCase() == name.toLowerCase());

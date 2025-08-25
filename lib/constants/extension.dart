@@ -248,4 +248,9 @@ extension NavigationExtension on BuildContext {
   Future<T?> pushAndRemoveUntil<T>(Widget page) {
     return Navigator.pushAndRemoveUntil<T>(this, MaterialPageRoute(builder: (_) => page), (route) => false);
   }
+
+  //popAllAndPushNamed
+  Future<T?> popAllAndPushNamed<T extends Object?>(String routeName, {Object? arguments}) {
+    return Navigator.pushNamedAndRemoveUntil<T>(this, routeName, (route) => false, arguments: arguments);
+  }
 }

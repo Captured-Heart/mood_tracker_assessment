@@ -79,7 +79,7 @@ class AddJournalForm extends ConsumerWidget {
             ),
 
           MoodPrimaryButton(
-            state: journalState.isLoading ? ButtonState.loading : ButtonState.loaded,
+            state: journalState.value?.isLoading == true ? ButtonState.loading : ButtonState.loaded,
             onPressed: () {
               journalCtrl.setErrorMessage(null);
               if (addJournalMoodIndex == null) {

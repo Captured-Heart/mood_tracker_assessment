@@ -59,6 +59,7 @@ class ProfileView extends StatelessWidget {
                   state: authState.isLoading ? ButtonState.loading : ButtonState.loaded,
                   onPressed: () {
                     ref.read(authProvider.notifier).signOut();
+                    context.popAllAndPushNamed('/');
                   },
                   title: 'Sign Out',
                   bGcolor: AppColors.moodRed,

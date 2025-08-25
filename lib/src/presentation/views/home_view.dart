@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,11 +6,13 @@ import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
-import 'package:mood_tracker_assessment/src/data/controller/mood_controller.dart';
+import 'package:mood_tracker_assessment/src/data/controller/reward_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_mood_calendar.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_profile_pic_name.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_set_mood.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_list_tile.dart';
+import 'package:mood_tracker_assessment/src/presentation/widgets/reward_dialog.dart';
+import 'package:mood_tracker_assessment/src/presentation/widgets/rewards_badges_empty.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/texts/texts_widget.dart';
 
 class HomeView extends ConsumerWidget {
@@ -21,6 +21,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final journalState = ref.watch(journalProvider);
+    final rewardPoints = ref.watch(rewardProvider.select((state) => state.valueOrNull?.totalPoints));
     final journalList = journalState.valueOrNull?.journalList;
 
     return Scaffold(
@@ -35,17 +36,24 @@ class HomeView extends ConsumerWidget {
                 Flexible(child: HomeProfilePicNameWidget()),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 5,
                   children: [
                     MoodText.text(
-                      text: '+20',
+                      text: '+$rewardPoints',
                       context: context,
-                      textStyle: context.textTheme.titleLarge,
-                      fontWeight: FontWeight.w500,
+                      textStyle: context.textTheme.bodyLarge,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Image.asset(AppImages.coinBag.pngPath, height: 40, width: 40, fit: BoxFit.fill),
+                    Icon(Icons.stars, size: 28, color: AppColors.moodYellow),
                   ],
+                ).onTap(
+                  onTap: () {
+                    ref.read(bottomNavBarIndexProvider.notifier).update((state) => 1);
+                  },
+                  tooltip: 'View Rewards',
                 ),
+                const SizedBox(width: 8),
               ],
             ),
             //
@@ -59,22 +67,11 @@ class HomeView extends ConsumerWidget {
                     // set mood
                     HomeSetMoodWidget(),
 
-                    // HomeRewardDialog(),
+                    // RewardDialog(),
                     // TableCalendar
                     HomeMoodCalendar(),
                     //descriptions
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.kGrey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: MoodText.text(
-                        text: 'the description of the date chosen' * 89,
-                        context: context,
-                        textStyle: context.textTheme.bodyMedium,
-                        maxLines: 2,
-                      ).padSymmetric(horizontal: 10, vertical: 15),
-                    ),
+
                     //  recent activities
                     Column(
                       children: [
@@ -93,20 +90,33 @@ class HomeView extends ConsumerWidget {
                             ).onTapWithoutAnimation(
                               onTap: () {
                                 ref.read(bottomNavBarIndexProvider.notifier).update((state) => 2);
-
-                                // context.pushNamed(NavRoutes.journalRoute);
                               },
                               tooltip: 'See all journal entries',
                             ),
                           ],
                         ),
+
                         // The list of recent activities
-                        ...List.generate(journalList?.length ?? 0, (index) {
-                          final journal = journalList![index];
-                          return JournalListTile(
-                            journal: journal,
-                          ).fadeInFromTop(delay: (index * 50).ms, animationDuration: 20.ms);
-                        }),
+                        journalList == null || journalList.isEmpty
+                            ? RewardsBadgesEmpty(
+                              title: 'No Journal Entries Yet',
+                              description: 'Start writing journal entries to earn your first badge!',
+                              icon: Icons.book,
+                            ).onTap(
+                              onTap: () {
+                                ref.read(bottomNavBarIndexProvider.notifier).update((state) => 2);
+                              },
+                              tooltip: 'Add Journal Entry',
+                            )
+                            : Column(
+                              children: List.generate(journalList.take(3).length, (index) {
+                                final journal = journalList[index];
+
+                                return JournalListTile(
+                                  journal: journal,
+                                ).fadeInFromTop(delay: (index * 50).ms, animationDuration: 20.ms);
+                              }),
+                            ),
                       ],
                     ),
                   ],
@@ -116,45 +126,6 @@ class HomeView extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class HomeRewardDialog extends StatelessWidget {
-  const HomeRewardDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Image.asset(AppImages.rewardBackground.pngPath, fit: BoxFit.fill),
-        Positioned(
-          top: 55,
-          left: context.deviceWidth(0.15),
-          child: SizedBox(
-            width: context.deviceWidth(0.6),
-            child: Column(
-              spacing: 10,
-              children: [
-                Image.asset(AppImages.happyFace.pngPath, fit: BoxFit.fill, height: 70),
-                MoodText.text(
-                  text: 'Congratulations!',
-                  context: context,
-                  textStyle: context.textTheme.titleLarge,
-                  isCenter: true,
-                ),
-                MoodText.text(
-                  text: 'You have been consistently tracking your mood!',
-                  context: context,
-                  textStyle: context.textTheme.bodyLarge,
-                  isCenter: true,
-                ),
-                HomeMoodCalendar(),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

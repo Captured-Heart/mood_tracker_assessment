@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
@@ -26,7 +24,14 @@ class MoodNotifier extends AsyncNotifier<MoodState> {
     _noteController = TextEditingController();
     final allMoods = await _moodRepository.getMoodsByUserId();
     final hasMoodForToday = allMoods.any((mood) => mood.createdAt?.isToday == true);
-    return MoodState(moods: allMoods, hasMoodForToday: hasMoodForToday);
+    final showDescriptionForToday =
+        allMoods
+            .firstWhere(
+              (mood) => mood.createdAt?.isToday == true,
+              orElse: () => MoodEntity(id: '', mood: '', description: 'No mood entry for today!'),
+            )
+            .description;
+    return MoodState(moods: allMoods, hasMoodForToday: hasMoodForToday, showDescription: showDescriptionForToday);
   }
 
   TextEditingController get noteController => _noteController;
@@ -53,6 +58,8 @@ class MoodNotifier extends AsyncNotifier<MoodState> {
     _setIsLoading(false);
     _noteController.clear();
     onSuccess?.call();
+    //rebuild
+    ref.invalidateSelf();
   }
 
   Future<void> addMood({VoidCallback? onSuccess}) async {
@@ -65,7 +72,6 @@ class MoodNotifier extends AsyncNotifier<MoodState> {
       userId: CacheHelper.currentUser?.id,
     );
     final result = await simulateLoader(() => _moodRepository.addMood(moodEntity), milliseconds: 10);
-    inspect(result);
 
     return switch (result) {
       RepoError(message: var message) => _setErrorMessage(message),
@@ -100,26 +106,46 @@ class MoodNotifier extends AsyncNotifier<MoodState> {
       _setErrorMessage(e.toString());
     }
   }
+
+  void getShowDescriptionForSelectedDay(DateTime selectedDay) {
+    final moods = state.value?.moods ?? [];
+    final moodForTheDay = moods.firstWhere((mood) {
+      if (mood.createdAt == null) return false;
+      final moodDate = DateTime.tryParse(mood.createdAt!);
+      if (moodDate == null) return false;
+      // Compare dates without time (year, month, day only)
+      return moodDate.year == selectedDay.year &&
+          moodDate.month == selectedDay.month &&
+          moodDate.day == selectedDay.day;
+    }, orElse: () => MoodEntity(id: '', mood: '', description: 'No mood entry for this day!'));
+    state = AsyncValue.data(state.value!.copyWith(showDescription: moodForTheDay.description, focusedDay: selectedDay));
+  }
 }
 
 class MoodState {
   final bool isLoading;
   final String? errorMessage;
+  final String? showDescription;
   final int? moodIndex;
   final bool hasMoodForToday;
   final List<MoodEntity> moods;
+  final DateTime focusedDay;
 
   MoodState({
     this.isLoading = false,
     this.errorMessage,
+    this.showDescription,
+    DateTime? focusedDay,
     this.moods = const [],
     this.moodIndex,
     this.hasMoodForToday = false,
-  });
+  }) : focusedDay = focusedDay ?? DateTime.now();
 
   MoodState copyWith({
     bool? isLoading,
     String? errorMessage,
+    String? showDescription,
+    DateTime? focusedDay,
     List<MoodEntity>? moods,
     int? moodIndex,
     bool? hasMoodForToday,
@@ -127,6 +153,8 @@ class MoodState {
     return MoodState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
+      showDescription: showDescription ?? this.showDescription,
+      focusedDay: focusedDay ?? this.focusedDay,
       moods: moods ?? this.moods,
       moodIndex: moodIndex ?? this.moodIndex,
       hasMoodForToday: hasMoodForToday ?? this.hasMoodForToday,
