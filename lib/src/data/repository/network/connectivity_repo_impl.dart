@@ -12,8 +12,6 @@ class ConnectivityRepositoryImpl implements ConnectivityRepository {
   // leveraging on the InternetConnectionChecker package because it not just check the connectivity status but also checks for poor data connection
   Future<bool> _checkConnectivity() async {
     try {
-      InternetConnection().onStatusChange;
-
       return InternetConnection().hasInternetAccess;
     } catch (e) {
       return false;

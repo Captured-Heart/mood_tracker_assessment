@@ -6,7 +6,6 @@ import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
 import 'package:mood_tracker_assessment/constants/text_constants.dart';
-import 'package:mood_tracker_assessment/hive_helper/cache_helper.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_form.dart';
