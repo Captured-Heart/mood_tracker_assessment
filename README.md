@@ -14,9 +14,9 @@ Figma user </a> and also from this<a href="https://dribbble.com/shots/22029102-M
 
 # Demo Video
 
-<div align="center">
-  <img src="./assets/images/png/login_bg.png" width="1000" height="350" alt="Mood Tracker Background"/>
-</div>
+
+https://github.com/user-attachments/assets/5147f1fd-14da-4b24-956f-0bafbb78e720
+
 
 This project demonstrates the following Flutter development practices: clean architecture, state management with Riverpod, local data persistence with Hive, and modern UI animations.
 
