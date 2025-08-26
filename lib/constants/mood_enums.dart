@@ -17,6 +17,15 @@ enum MoodEnum {
     return MoodEnum.values.firstWhere((mood) => mood.moodName.toLowerCase() == name.toLowerCase());
   }
 
+  num get getClaimedThreshold {
+    return switch (this) {
+      MoodEnum.awesome => 10,
+      MoodEnum.good => 5,
+      MoodEnum.sad => 3,
+      MoodEnum.horrible => 1,
+    };
+  }
+
   static MoodEnum fromIndex(int? index) {
     return MoodEnum.values[index ?? 0];
   }

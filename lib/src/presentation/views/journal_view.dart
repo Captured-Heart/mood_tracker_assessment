@@ -23,11 +23,21 @@ class JournalView extends ConsumerWidget {
         onPressed: () {
           showModalBottomSheet(
             context: context,
-
-            constraints: BoxConstraints(maxHeight: context.deviceHeight(0.9)),
+            isScrollControlled: true,
+            isDismissible: true,
+            enableDrag: true,
             elevation: 8,
             builder: (context) {
-              return AddJournalForm();
+              return Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: context.deviceHeight(0.6),
+                    minHeight: context.deviceHeight(0.5),
+                  ),
+                  child: AddJournalForm(),
+                ),
+              );
             },
           );
         },

@@ -29,36 +29,46 @@ class AddJournalForm extends ConsumerWidget {
         spacing: 20,
         children: [
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(MoodEnum.values.length, (index) {
-                final mood = MoodEnum.values[index];
-                final isNotSelected = addJournalMoodIndex != index;
-                return Column(
-                  spacing: 5,
-                  children: [
-                    Flexible(
-                      child: ImageFiltered(
-                        enabled: isNotSelected,
-                        imageFilter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                        child: Image.asset(mood.imagePath, height: !isNotSelected ? 100 : 70).onTap(
-                          onTap: () {
-                            journalCtrl.chooseJournalMood(index);
-                          },
-                          tooltip: mood.moodName,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(MoodEnum.values.length, (index) {
+                  final mood = MoodEnum.values[index];
+                  final isNotSelected = addJournalMoodIndex != index;
+                  return Expanded(
+                    child: Column(
+                      spacing: 5,
+                      children: [
+                        Flexible(
+                          child: ImageFiltered(
+                            enabled: isNotSelected,
+                            imageFilter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                            child: Image.asset(
+                              mood.imagePath,
+                              height: !isNotSelected ? 100 : 70,
+                              fit: BoxFit.cover,
+                            ).onTap(
+                              onTap: () {
+                                journalCtrl.chooseJournalMood(index);
+                              },
+                              tooltip: mood.moodName,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    MoodText.text(
-                      context: context,
-                      text: mood.moodName,
-                      textStyle: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: !isNotSelected ? FontWeight.w600 : FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ).padSymmetric(horizontal: 5);
-              }),
+                        MoodText.text(
+                          context: context,
+                          text: mood.moodName,
+                          textStyle: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: !isNotSelected ? FontWeight.w600 : FontWeight.w300,
+                          ),
+                        ),
+                      ],
+                    ).padSymmetric(horizontal: 5),
+                  );
+                }),
+              ),
             ),
           ),
 

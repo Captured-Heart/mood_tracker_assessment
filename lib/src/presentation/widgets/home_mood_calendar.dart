@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
@@ -20,16 +17,13 @@ class HomeMoodCalendar extends ConsumerStatefulWidget {
 }
 
 class _HomeMoodCalendarState extends ConsumerState<HomeMoodCalendar> {
-  late DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   @override
   Widget build(BuildContext context) {
     final moodState = ref.watch(moodProvider).valueOrNull;
     final moodList = moodState?.moods;
-    inspect(moodList);
 
-    //TODO: CUSTOMIZE TABLE LATER
     return Column(
       spacing: 10,
       children: [
@@ -43,10 +37,6 @@ class _HomeMoodCalendarState extends ConsumerState<HomeMoodCalendar> {
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           onDaySelected: (selectedDay, focusedDay) {
             ref.read(moodProvider.notifier).getShowDescriptionForSelectedDay(selectedDay);
-            // setState(() {
-            //   // _selectedDay = selectedDay;
-            //   _focusedDay = focusedDay;
-            // });
           },
           rowHeight: 60,
           daysOfWeekHeight: 20,
@@ -57,9 +47,9 @@ class _HomeMoodCalendarState extends ConsumerState<HomeMoodCalendar> {
                 text: DateFormat('E', context.locale.languageCode).format(day),
                 isCenter: true,
                 textStyle: context.textTheme.bodyLarge,
-                color: isSameDay(day, (moodState?.focusedDay ?? _focusedDay)) ? AppColors.kPrimary : null,
+                color: isSameDay(day, (moodState?.focusedDay ?? DateTime.now())) ? AppColors.kPrimary : null,
                 fontWeight:
-                    isSameDay(day, (moodState?.focusedDay ?? _focusedDay)) ? FontWeight.bold : FontWeight.normal,
+                    isSameDay(day, (moodState?.focusedDay ?? DateTime.now())) ? FontWeight.bold : FontWeight.normal,
               ).padOnly(right: 5);
             },
             todayBuilder:
@@ -110,7 +100,6 @@ class MoodCalendarWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // if (imagesForTheDays == null || imagesForTheDays.isEmpty)
           Expanded(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -138,10 +127,6 @@ class MoodCalendarWidget extends StatelessWidget {
                       ),
             ),
           ),
-          // if (imagesForTheDays != null && imagesForTheDays.isNotEmpty)
-          //   Expanded(
-          //     child: Image.asset(MoodEnum.getMoodEnum(imagesForTheDays.first.mood).imagePath, fit: BoxFit.cover),
-          //   ),
         ],
       ).padOnly(right: 5),
     );

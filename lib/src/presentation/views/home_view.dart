@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
-import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
@@ -13,7 +12,6 @@ import 'package:mood_tracker_assessment/src/presentation/widgets/home_mood_calen
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_profile_pic_name.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/home_set_mood.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/journal_list_tile.dart';
-import 'package:mood_tracker_assessment/src/presentation/widgets/reward_dialog.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/rewards_badges_empty.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/texts/texts_widget.dart';
 

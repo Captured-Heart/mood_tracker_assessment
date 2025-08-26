@@ -48,6 +48,8 @@ class RewardNotifier extends AutoDisposeAsyncNotifier<RewardState> {
       ),
     );
   }
+
+  
 }
 
 class RewardState {

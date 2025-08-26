@@ -114,15 +114,29 @@ class TokenRepositoryImpl extends TokenRepository {
   }
 
   @override
-  Future<bool> isAuthenticated() {
-    // TODO: implement isAuthenticated
-    throw UnimplementedError();
+  Future<bool> isAuthenticated() async {
+    try {
+      final token = await getValidToken();
+      return token != null;
+    } catch (e) {
+      print('[TOKEN] Error checking authentication: $e');
+      return false;
+    }
   }
 
   @override
-  Future<void> clearTokens() {
-    // TODO: implement clearTokens
-    throw UnimplementedError();
+  Future<void> clearTokens() async {
+    try {
+      await Future.wait([
+        _secureStorage.delete(key: _accessTokenKey),
+        _secureStorage.delete(key: _refreshTokenKey),
+        _secureStorage.delete(key: _tokenExpiryKey),
+        _secureStorage.delete(key: _tokenHashKey),
+      ]);
+      print('[TOKEN] All tokens cleared');
+    } catch (e) {
+      print('[TOKEN] Error clearing tokens: $e');
+    }
   }
 
   @override
@@ -154,8 +168,32 @@ class TokenRepositoryImpl extends TokenRepository {
   }
 
   @override
-  Future<bool> refreshToken() {
-    // TODO: implement refreshToken
-    throw UnimplementedError();
+  Future<bool> refreshToken() async {
+    try {
+      final refreshToken = await getRefreshToken();
+      if (refreshToken == null) {
+        print('[TOKEN] No refresh token available');
+        return false;
+      }
+
+      print('[TOKEN] Simulating token refresh...');
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Simulate getting new tokens from API
+      final newAccessToken = tokenUtils.generateDemoToken();
+      final newRefreshToken = tokenUtils.generateDemoToken();
+
+      await storeTokens(
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        expiresIn: 3600, // 1 hour
+      );
+
+      print('[TOKEN] Token refreshed successfully');
+      return true;
+    } catch (e) {
+      print('[TOKEN] Error refreshing token: $e');
+      return false;
+    }
   }
 }

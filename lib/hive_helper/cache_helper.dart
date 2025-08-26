@@ -43,6 +43,14 @@ class CacheHelper {
     await _threshHoldLocalModel.write(HiveKeys.threshHold.name, threshHold);
   }
 
+  // delete some num from threshold
+  static Future<void> deleteSomeThreshold(num threshHold) async {
+    var oldThreshold = getClaimedThreshold();
+    if (oldThreshold < threshHold) return;
+    oldThreshold -= threshHold;
+    await _threshHoldLocalModel.write(HiveKeys.threshHold.name, oldThreshold);
+  }
+
   static num getClaimedThreshold() {
     return _threshHoldLocalModel.read(HiveKeys.threshHold.name) ?? 0;
   }

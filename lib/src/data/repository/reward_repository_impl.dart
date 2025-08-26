@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
 import 'package:mood_tracker_assessment/constants/text_constants.dart';
+import 'package:mood_tracker_assessment/hive_helper/cache_helper.dart';
 import 'package:mood_tracker_assessment/src/data/repository/journal_repo_impl.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/mood_entity.dart';
 import 'package:mood_tracker_assessment/src/domain/entities/reward_entity.dart';
@@ -68,11 +69,11 @@ class RewardRepositoryImpl implements RewardsRepository {
     for (final journal in journals) {
       final mood = MoodEnum.getMoodEnum(journal.mood);
       totalPoints += mood.points;
-
       for (final badge in badges) {
         if (totalPoints >= badge.threshold && !earnedThresholds.contains(badge.threshold)) {
           earned.add(EarnedBadge(badge: badge, earnedAt: DateTime.parse(journal.createdAt!)));
           earnedThresholds.add(badge.threshold);
+          CacheHelper.setClaimedThreshold(badge.threshold);
         }
       }
     }

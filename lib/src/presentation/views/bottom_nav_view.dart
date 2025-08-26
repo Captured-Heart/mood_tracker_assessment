@@ -1,17 +1,17 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/hive_helper/cache_helper.dart';
 import 'package:mood_tracker_assessment/src/data/controller/bottom_nav_controller.dart';
+import 'package:mood_tracker_assessment/src/data/controller/confetti_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/journal_controller.dart';
 import 'package:mood_tracker_assessment/src/data/controller/reward_controller.dart';
 import 'package:mood_tracker_assessment/src/presentation/views/rewards_view.dart';
 import 'package:mood_tracker_assessment/src/presentation/views/home_view.dart';
 import 'package:mood_tracker_assessment/src/presentation/views/journal_view.dart';
 import 'package:mood_tracker_assessment/src/presentation/views/profile_view.dart';
+import 'package:mood_tracker_assessment/src/presentation/widgets/animations/confetti_widget.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/reward_dialog.dart';
 
 class BottomNavView extends ConsumerStatefulWidget {

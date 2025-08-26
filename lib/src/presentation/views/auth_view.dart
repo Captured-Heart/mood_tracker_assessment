@@ -56,8 +56,8 @@ class AuthView extends ConsumerWidget {
             right: 0,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacings.k20, vertical: AppSpacings.k28),
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: context.theme.scaffoldBackgroundColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(AppSpacings.k20),
                   topRight: Radius.circular(AppSpacings.k20),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/button_state.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/spacings.dart';

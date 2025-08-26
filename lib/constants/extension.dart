@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
 import 'package:mood_tracker_assessment/constants/text_constants.dart';
 import 'package:mood_tracker_assessment/src/presentation/widgets/animations/toggle_animation.dart';
@@ -12,6 +11,7 @@ extension ThemeExtensions on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
   Size get size => MediaQuery.sizeOf(this);
+  EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
   double get totlaDeviceHeight => size.height;
   double deviceHeight(double h) => size.height * h;
   double deviceWidth(double w) => size.width * w;

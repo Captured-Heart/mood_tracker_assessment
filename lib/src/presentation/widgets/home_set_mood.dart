@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mood_tracker_assessment/constants/app_colors.dart';
-import 'package:mood_tracker_assessment/constants/app_images.dart';
 import 'package:mood_tracker_assessment/constants/extension.dart';
 import 'package:mood_tracker_assessment/constants/mood_enums.dart';
 import 'package:mood_tracker_assessment/constants/nav_routes.dart';

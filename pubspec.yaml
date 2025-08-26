@@ -1,12 +1,13 @@
 name: mood_tracker_assessment
-description: "A new Flutter project."
+description: "Marcel created this Mood Tracker app for a technical assessment"
 publish_to: "none"
-version: 0.1.0
+version: 0.0.3+3
 
 environment:
   sdk: ^3.7.0
 
 dependencies:
+  confetti: ^0.8.0
   crypto: ^3.0.6
   dio: ^5.9.0
   dio_smart_retry: ^7.0.1

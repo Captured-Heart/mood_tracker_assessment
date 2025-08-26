@@ -1,4 +1,4 @@
-package com.example.mood_tracker_assessment
+package com.capturedHeart.moodTracker
 
 import io.flutter.embedding.android.FlutterActivity
 
