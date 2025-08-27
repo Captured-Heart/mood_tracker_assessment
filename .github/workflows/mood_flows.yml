@@ -19,8 +19,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: "11"
-          distribution: "zulu"
+          java-version: "17"
+          distribution: "oracle"
         #SETUP FLUTTER
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
