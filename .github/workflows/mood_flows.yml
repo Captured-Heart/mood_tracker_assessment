@@ -1,0 +1,92 @@
+on:
+  pull_request:
+    branches:
+      - UI_build
+  push:
+    branches:
+      - main
+name: "Build & Release"
+jobs:
+  build:
+    # i am setting up system and dependencies (Java, Flutter verison etc)
+    name: Setting up the environment
+    runs-on: macos-latest
+    steps:
+      #CHECKOUT THE REPOSITORY
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      #SETUP JAVA
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "11"
+          distribution: "zulu"
+        #SETUP FLUTTER
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.0"
+          channel: "stable"
+          cache: true
+#IF I HAD FIREBASE INSTALLED, I WOULD ACCESS THE DETAILS OF THE FILES HERE
+      #- run: echo ${{ secrets.ENV_FILE }} | base64 -d > .env
+     # - run: echo ${{ secrets.FIREBASE_ANDROID_FILE }} | base64 -d > android/app/google-services.json
+      #- run: echo ${{ secrets.FIREBASE_IOS_FILE }} | base64 -d > ios/Runner/GoogleService-Info.plist
+      #- run: echo ${{ secrets.FIREBASE_OPTIONS_FILE }} | base64 -d > lib/firebase_options.dart
+#SETTING UP KEYSTORE
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=keystore.jks" >> android/key.properties
+       # BUILD THE APP
+      - name: Cleaning and making the builds for APK,AAB & IPA
+        run: |
+          flutter clean
+      - run: flutter pub get
+      - run: flutter build apk --debug --split-per-abi
+      - run: flutter build aab
+      # BUILDING IPA NOW
+      - name: BUILDING IOS (ipa) NOW
+        run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+        # EXTRACT THE VERSION
+      - name: Extract version from pubspec.yaml
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+        # CHECK IF THE TAG EXISTS
+      - name: Check if Tag Exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+        # Modify THE TAG
+      - name: Modify Tag
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          new_version="${{ env.VERSION }}-build-${{ github.run_number }}"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+        # PUSH TO RELEASE
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          ## i am pushing only aab and ipa to release
+          artifacts: "build/app/outputs/bundle/release/app-release.aab, build/ios/iphoneos/app.ipa"
+          tag: v${{ env.VERSION }}.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}
