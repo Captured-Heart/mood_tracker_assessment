@@ -33,6 +33,15 @@ jobs:
           flutter-version: "3.29.0"
           channel: "stable"
           cache: true
+        
+         # Cache Flutter packages
+      - name: Cache Flutter pub
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
       #IF I HAD FIREBASE INSTALLED, I WOULD ACCESS THE DETAILS OF THE FILES HERE
       #- run: echo ${{ secrets.ENV_FILE }} | base64 -d > .env
       # - run: echo ${{ secrets.FIREBASE_ANDROID_FILE }} | base64 -d > android/app/google-services.json
@@ -56,23 +65,35 @@ jobs:
       - run: flutter build apk --debug --split-per-abi
       - run: flutter build aab
       # BUILDING IPA NOW
-      - name: BUILDING IOS (ipa) NOW
-        run: |
-          flutter build ios --simulator --debug --no-codesign
-          cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
-          cd ..
-          zip -r app.ipa Payload
+      # - name: BUILDING IOS (ipa) NOW
+      #   run: |
+      #     flutter build ios --simulator --debug --no-codesign
+      #     cd build/ios/iphoneos
+      #     mkdir Payload
+      #     cd Payload
+      #     ln -s ../Runner.app
+      #     cd ..
+      #     zip -r app.ipa Payload
 
         # RUN XCODE BUILD & TEST
-      - name: Build and Test
+          #Detect the latest available iPhone 15 Pro runtime dynamically
+      - name: Find Simulator Runtime
+        id: sim
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes | grep -m1 "iOS" | sed -E 's/.*iOS ([0-9]+\.[0-9]+).*/\1/')
+          echo "runtime=$RUNTIME" >> $GITHUB_OUTPUT
+
+      - name: Boot Simulator
+        run: |
+          xcrun simctl boot "iPhone 15 Pro" || true
+          xcrun simctl list devices
+
+      - name: Xcode Build & Test
         run: |
           xcodebuild clean build test \
-          -workspace ios/Runner.xcworkspace \
-          -scheme Runner \
-          -destination 'platform=iOS Simulator,name=iPhone 15 Pro'
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -destination "platform=iOS Simulator,name=iPhone 15 Pro,OS=${{ steps.sim.outputs.runtime }}"
 
       #SETUP JAVA
       # EXTRACT THE VERSION
