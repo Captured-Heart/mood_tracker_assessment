@@ -58,7 +58,7 @@ jobs:
       # BUILDING IPA NOW
       - name: BUILDING IOS (ipa) NOW
         run: |
-          flutter build ios --no-codesign
+          flutter build ios --simulator --debug --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
