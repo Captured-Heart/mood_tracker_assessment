@@ -77,23 +77,40 @@ jobs:
 
         # RUN XCODE BUILD & TEST
           #Detect the latest available iPhone 15 Pro runtime dynamically
-      - name: Find Simulator Runtime
+      - name: Find Simulator
         id: sim
         run: |
-          RUNTIME=$(xcrun simctl list runtimes | grep -m1 "iOS" | sed -E 's/.*iOS ([0-9]+\.[0-9]+).*/\1/')
-          echo "runtime=$RUNTIME" >> $GITHUB_OUTPUT
+            # Try to find iPhone 15 Pro
+            DEVICE_LINE=$(xcrun simctl list devices available | grep "iPhone 15 Pro" | head -n 1)
 
+            if [ -z "$DEVICE_LINE" ]; then
+              echo "⚠️ iPhone 15 Pro not found, falling back to first available simulator..."
+              DEVICE_LINE=$(xcrun simctl list devices available | grep "Booted" -v | head -n 1)
+            fi
+
+            DEVICE_UDID=$(echo "$DEVICE_LINE" | awk -F '[()]' '{print $2}')
+            DEVICE_NAME=$(echo "$DEVICE_LINE" | awk -F '[()]' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            DEVICE_OS=$(echo "$DEVICE_LINE" | sed -E 's/.*OS ([0-9]+\.[0-9]+).*/\1/')
+
+            echo "device=$DEVICE_UDID" >> $GITHUB_OUTPUT
+            echo "name=$DEVICE_NAME" >> $GITHUB_OUTPUT
+            echo "os=$DEVICE_OS" >> $GITHUB_OUTPUT
+
+            echo "✅ Using Simulator: $DEVICE_NAME (OS $DEVICE_OS, UDID $DEVICE_UDID)"
+
+        # Boot the chosen simulator
       - name: Boot Simulator
         run: |
-          xcrun simctl boot "iPhone 15 Pro" || true
-          xcrun simctl list devices
+            xcrun simctl boot "${{ steps.sim.outputs.device }}" || true
+            xcrun simctl list devices
 
+        # Run Xcode build & test on the chosen simulator
       - name: Xcode Build & Test
         run: |
-          xcodebuild clean build test \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -destination "platform=iOS Simulator,name=iPhone 15 Pro,OS=${{ steps.sim.outputs.runtime }}"
+            xcodebuild clean build test \
+              -workspace ios/Runner.xcworkspace \
+              -scheme Runner \
+              -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.device }}"
 
       #SETUP JAVA
       # EXTRACT THE VERSION
